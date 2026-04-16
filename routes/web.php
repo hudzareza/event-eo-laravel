@@ -20,6 +20,9 @@ Route::get('/event/{id}', function ($id) {
 Route::post('/event/{id}/register', [EventRegistrationController::class, 'store'])
     ->name('event.register');
 
+Route::get('/validasi', function () {
+    return view('frontend/validasi/index');
+});
 
 // Dashboard / Backend
 Route::get('/dashboard', function () {
