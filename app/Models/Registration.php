@@ -8,12 +8,9 @@ class Registration extends Model
 {
     protected $fillable = [
         'event_id',
-        'participant_id',
-        'user_id',
-        'status',
-        'qr_code',
-        'checkin_status',
-        'checkin_at'
+        'leader_name',
+        'leader_email',
+        'total_attendees',
     ];
 
     public function user()
@@ -26,8 +23,8 @@ class Registration extends Model
         return $this->belongsTo(Event::class);
     }
 
-    public function participant()
+    public function participants()
     {
-        return $this->belongsTo(Participant::class);
+        return $this->hasMany(Participant::class);
     }
 }

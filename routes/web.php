@@ -9,6 +9,14 @@ Route::get('/', function () {
     return view('frontend/index');
 });
 
+Route::get('/register', function () {
+    return view('auth.register');
+});
+
+Route::get('/login', function () {
+    return view('auth.login');
+});
+
 Route::get('/about', function () {
     return view('frontend/about');
 });

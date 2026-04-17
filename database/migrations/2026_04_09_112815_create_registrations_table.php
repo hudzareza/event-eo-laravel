@@ -17,11 +17,15 @@ return new class extends Migration
             $table->foreignId('event_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
-            $table->unique(['event_id','user_id']);
+            $table->foreignId('participant_id')
+                ->nullable()
+                ->constrained()
+                ->cascadeOnDelete();
 
-            $table->enum('status', ['registered','paid','cancelled'])->default('registered');
+            $table->unique(['event_id','participant_id']);
 
-            $table->string('qr_code')->nullable();
+            $table->string('qr_code');
+            $table->string('qr_image')->nullable();
 
             $table->boolean('checkin_status')->default(false);
             $table->dateTime('checkin_at')->nullable();

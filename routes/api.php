@@ -5,21 +5,49 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\CheckinController;
 
+/*
+|--------------------------------------------------------------------------
+| PUBLIC
+|--------------------------------------------------------------------------
+*/
 Route::post('/register',[AuthController::class,'register']);
 Route::post('/login',[AuthController::class,'login']);
-
 Route::get('/events',[EventController::class,'index']);
 
-Route::middleware('auth:sanctum')->group(function(){
-
+/*
+    |--------------------------------------------------------------------------
+    | EVENT REGISTRATION
+    |--------------------------------------------------------------------------
+    */
     Route::post('/events/{id}/register',[EventController::class,'register']);
 
-    Route::post('/checkin',[CheckinController::class,'scan']);
+/*
+
+|--------------------------------------------------------------------------
+| AUTH REQUIRED
+|--------------------------------------------------------------------------
+*/
+Route::middleware('auth:sanctum')->group(function(){
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | EVENT CRUD (ADMIN ONLY)
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('role:admin,super_admin')->group(function(){
+        Route::post('/events', [EventController::class, 'store']);
+        Route::put('/events/{id}', [EventController::class, 'update']);
+        Route::delete('/events/{id}', [EventController::class, 'destroy']);
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | CHECK-IN (STAFF)
+    |--------------------------------------------------------------------------
+    */
+    Route::middleware('role:staff,admin,super_admin')->group(function(){
+        Route::post('/checkin',[CheckinController::class,'scan']);
+    });
 
 });
-
-Route::get('/login', function () {
-    return response()->json([
-        'message' => 'Unauthenticated'
-    ], 401);
-})->name('login');

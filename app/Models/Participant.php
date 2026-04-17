@@ -7,14 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 class Participant extends Model
 {
     protected $fillable = [
+        'registration_id',
         'nama',
         'email',
         'no_telp',
         'nik',
+        'qr_code',
+        'qr_token',
     ];
 
-    public function registrations()
+    public function registration()
     {
-        return $this->hasMany(Registration::class);
+        return $this->belongsTo(Registration::class);
     }
 }

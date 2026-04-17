@@ -10,6 +10,10 @@ class CheckinController extends Controller
 {
     public function scan(Request $request)
     {
+        $request->validate([
+            'qr_code' => 'required'
+        ]);
+
         $registration = Registration::where('qr_code', $request->qr_code)->first();
 
         if (!$registration) {
@@ -20,7 +24,8 @@ class CheckinController extends Controller
 
         if ($registration->checkin_status) {
             return response()->json([
-                'message' => 'Sudah check-in sebelumnya'
+                'message' => 'Sudah check-in sebelumnya',
+                'data' => $registration
             ], 400);
         }
 
@@ -28,8 +33,6 @@ class CheckinController extends Controller
             'checkin_status' => true,
             'checkin_at' => now()
         ]);
-
-        $registration->refresh();
 
         return response()->json([
             'message' => 'Check-in berhasil',
