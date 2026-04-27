@@ -18,4 +18,13 @@ class EventController extends Controller
         $event = Event::findOrFail($id);
         return view('frontend.event.detail', compact('event'));
     }
+
+    public function success($id)
+    {
+        $registration = \App\Models\Registration::with('participants', 'event')->findOrFail($id);
+
+        $participant = $registration->participants->first();
+
+        return view('frontend.event.success', compact('registration', 'participant'));
+    }
 }

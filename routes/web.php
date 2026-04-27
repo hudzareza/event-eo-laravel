@@ -26,7 +26,7 @@ Route::get('/event', [EventController::class, 'index']);
 Route::get('/event/{id}', [EventController::class, 'show']);
 Route::post('/event/{id}/register', [EventRegistrationController::class, 'store'])
     ->name('event.register');
-
+Route::get('/event/success/{id}', [EventController::class, 'success'])->name('event.success');
 Route::get('/validasi', function () {
     return view('frontend/validasi/index');
 });
