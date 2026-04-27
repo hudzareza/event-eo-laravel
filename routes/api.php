@@ -10,7 +10,7 @@ use App\Http\Controllers\Api\CheckinController;
 | PUBLIC
 |--------------------------------------------------------------------------
 */
-Route::post('/register',[AuthController::class,'register']);
+
 Route::post('/login',[AuthController::class,'login']);
 Route::get('/events',[EventController::class,'index']);
 
@@ -36,6 +36,7 @@ Route::middleware('auth:sanctum')->group(function(){
     |--------------------------------------------------------------------------
     */
     Route::middleware('role:admin,super_admin')->group(function(){
+        Route::post('/users',[AuthController::class,'store']);
         Route::post('/events', [EventController::class, 'store']);
         Route::put('/events/{id}', [EventController::class, 'update']);
         Route::delete('/events/{id}', [EventController::class, 'destroy']);

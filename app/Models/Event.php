@@ -19,6 +19,8 @@ class Event extends Model
     protected $fillable = [
         'client_id',
         'title',
+        'slug',
+        'thumbnail',
         'description',
         'location',
         'start_date',
@@ -29,9 +31,8 @@ class Event extends Model
         'is_public',
         'is_paid',
         'price',
-        'access_token',
         'status',
-        'created_by'
+        'created_by',
     ];
 
     public function client()
