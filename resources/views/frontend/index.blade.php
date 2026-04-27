@@ -57,59 +57,31 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {{-- Looping event terbaru --}}
+            @foreach ($event as $e)
             <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-2xl transition duration-300">
                 <div class="h-48 bg-gray-200 relative">
-                    <a href="/event/1">
-                        <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&q=80&w=500" class="w-full h-full object-cover">
+                    <a href="/event/{{ $e->id }}">
+                        <img src="{{ $e->thumbnail }}" class="w-full h-full object-cover">
                     </a>
                     <span class="absolute top-4 left-4 bg-red-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Music</span>
                 </div>
                 <div class="p-6">
-                    <p class="text-red-500 text-sm font-bold">25 April 2026</p>
-                    <a href="/event/1" class="text-xl font-bold text-gray-800 hover:text-blue-600 transition">Konser Senja Merdeka</a>
-                    <p class="text-gray-500 mt-2 text-sm line-clamp-2">Nikmati alunan musik indie terbaik di pinggir pantai dengan pemandangan sunset.</p>
-                    <div class="mt-6 flex justify-between items-center">
-                        <span class="text-lg font-bold text-gray-900">Rp 150.000</span>
-                        <a href="/event/1" class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition">Detail</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-2xl transition duration-300">
-                <div class="h-48 bg-gray-200 relative">
-                    <a href="/event/2">
-                        <img src="https://images.unsplash.com/photo-1540575861501-7cf05a4b125a?auto=format&fit=crop&q=80&w=500" class="w-full h-full object-cover">
+                    <a href="/event/{{ $e->id }}">
+                        <p class="text-red-500 text-sm font-bold">{{ $e->title }}</p>
                     </a>
-                    <span class="absolute top-4 left-4 bg-blue-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Tech</span>
-                </div>
-                <div class="p-6">
-                    <p class="text-red-500 text-sm font-bold">12 Mei 2026</p>
-                    <a href="/event/2" class="text-xl font-bold text-gray-800 hover:text-blue-600 transition">Tech Conference 2026</a>
-                    <p class="text-gray-500 mt-2 text-sm line-clamp-2">Update skill lo tentang AI dan Web3 bareng expert dari berbagai belahan dunia.</p>
+                    <p class="text-sm py-2 mb-0">{{ \Carbon\Carbon::parse($e->date)->format('d F Y') }}</p>
+                    <a href="/event/{{ $e->id }}" class="text-xl font-bold text-gray-800 hover:text-blue-600 transition">{{ $e->name }}</a>
+                    <p class="text-gray-500 mt-2 text-sm line-clamp-2">{{ $e->description }}</p>
                     <div class="mt-6 flex justify-between items-center">
-                        <span class="text-lg font-bold text-gray-900">Gratis</span>
-                        <a href="/event/2" class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition">Daftar</a>
+                        @if ($e->price > 0)
+                            <p class="text-lg font-bold text-gray-900">Rp {{ number_format($e->price, 0, ',', '.') }}</p>
+                        @endif
+                        <a href="/event/{{ $e->id }}" class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition">Detail</a>
                     </div>
                 </div>
             </div>
-
-            <div class="bg-white rounded-2xl shadow-md overflow-hidden hover:shadow-2xl transition duration-300">
-                <div class="h-48 bg-gray-200 relative">
-                    <a href="/event/3">
-                        <img src="https://images.unsplash.com/photo-1511795409834-ef04bbd61622?auto=format&fit=crop&q=80&w=500" class="w-full h-full object-cover">
-                    </a>
-                    <span class="absolute top-4 left-4 bg-green-600 text-white text-xs font-bold px-3 py-1 rounded-full uppercase">Career</span>
-                </div>
-                <div class="p-6">
-                    <p class="text-red-500 text-sm font-bold">02 Juni 2026</p>
-                    <a href="/event/3" class="text-xl font-bold text-gray-800 hover:text-blue-600 transition">Networking Night</a>
-                    <p class="text-gray-500 mt-2 text-sm line-clamp-2">Perluas koneksi profesional lo sambil ngopi santai di coworking space hits.</p>
-                    <div class="mt-6 flex justify-between items-center">
-                        <span class="text-lg font-bold text-gray-900">Rp 50.000</span>
-                        <a href="/event/3" class="px-4 py-2 bg-gray-900 text-white rounded-lg text-sm font-medium hover:bg-gray-800 transition">Detail</a>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </div>
 </div>

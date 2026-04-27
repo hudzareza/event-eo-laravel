@@ -8,9 +8,12 @@ class Registration extends Model
 {
     protected $fillable = [
         'event_id',
-        'leader_name',
-        'leader_email',
-        'total_attendees',
+        'participant_id',
+        'user_id',
+        'qr_code',
+        'qr_image',
+        'checkin_status',
+        'checkin_at',
     ];
 
     public function user()

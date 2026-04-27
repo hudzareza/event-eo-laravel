@@ -1,13 +1,14 @@
 <?php
 
+use App\Http\Controllers\IndexController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventRegistrationController;
 
+use App\Http\Controllers\Backend\ListEventController;
+
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('frontend/index');
-});
+Route::get('/', [IndexController::class, 'index']);
 
 Route::get('/register', function () {
     return view('auth.register');
@@ -22,9 +23,7 @@ Route::get('/about', function () {
 });
 
 Route::get('/event', [EventController::class, 'index']);
-Route::get('/event/{id}', function ($id) {
-    return view('frontend/event/detail', ['eventId' => $id]);
-});
+Route::get('/event/{id}', [EventController::class, 'show']);
 Route::post('/event/{id}/register', [EventRegistrationController::class, 'store'])
     ->name('event.register');
 
@@ -45,3 +44,6 @@ Route::get('/peserta', function () {
 Route::get('/peserta/{id}', function ($id) {
     return view('backend/peserta/show', ['pesertaId' => $id]);
 });
+
+Route::get('/backend/event', [ListEventController::class, 'index']);
+Route::get('/backend/event/{id}', [ListEventController::class, 'show']);

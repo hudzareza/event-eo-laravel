@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 use App\Models\Event;
 use App\Models\User;
 use App\Models\Client;
+use App\Models\Registration;
+use App\Models\Participant;
 use Illuminate\Support\Str;
 
 class EventSeeder extends Seeder
@@ -83,23 +85,42 @@ class EventSeeder extends Seeder
         ];
 
         foreach ($events as $e) {
-            Event::create([
+            $event = Event::create([
                 'client_id' => $client->id,
-                'title' => 'Seminar Digital Marketing 2026',
-                'thumbnail' => 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30',
-                'description' => 'Belajar strategi digital marketing, AI ads, dan growth hacking.',
-                'location' => 'Jakarta',
-                'start_date' => now()->addDays(2),
-                'end_date' => now()->addDays(3),
-                'quota' => 100,
+                'title' => $e['title'],
+                'thumbnail' => $e['thumbnail'],
+                'description' => $e['description'],
+                'location' => $e['location'],
+                'start_date' => $e['start_date'],
+                'end_date' => $e['end_date'],
+                'quota' => $e['quota'],
                 'registered_count' => 0,
-                'event_type' => 'umum',
+                'event_type' => $e['event_type'],
                 'registration_type' => 'group',
                 'is_public' => true,
-                'is_paid' => false,
+                'is_paid' => $e['is_paid'],
+                'price' => $e['price'],
                 'status' => 'published',
                 'created_by' => $user->id
             ]);
+
+            // ✅ Create registration group first
+            $registration = Registration::create([
+                'event_id' => $event->id,
+                'user_id' => $user->id,
+                'qr_code' => 'QR-' . Str::uuid(),
+            ]);
+
+            // ✅ Create participants linked to registration
+            for ($i = 1; $i <= 3; $i++) {
+                Participant::create([
+                    'registration_id' => $registration->id,
+                    'nama' => 'Peserta ' . $i . ' - ' . $e['title'],
+                    'email' => 'peserta' . $i . '-' . Str::slug($e['title']) . '@test.com',
+                    'no_telp' => '08123456' . str_pad($i, 3, '0', STR_PAD_LEFT),
+                    'nik' => str_pad($i, 16, '1', STR_PAD_LEFT),
+                ]);
+            }
         }
     }
 }
