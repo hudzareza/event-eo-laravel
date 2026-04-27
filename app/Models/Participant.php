@@ -20,4 +20,9 @@ class Participant extends Model
     {
         return $this->belongsTo(Registration::class);
     }
+
+    public function activities()
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
 }

@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\EventController;
 use App\Http\Controllers\Api\CheckinController;
+use App\Http\Controllers\Api\ActivityController;
 
 /*
 |--------------------------------------------------------------------------
@@ -48,7 +49,9 @@ Route::middleware('auth:sanctum')->group(function(){
     |--------------------------------------------------------------------------
     */
     Route::middleware('role:staff,admin,super_admin')->group(function(){
-        Route::post('/checkin',[CheckinController::class,'scan']);
+        Route::post('checkin/qr', [CheckinController::class, 'scanQr']);
+        Route::post('checkin/wristband', [CheckinController::class, 'assignWristband']);
+        Route::post('activity/scan', [ActivityController::class, 'scanActivity']);
     });
 
 });
