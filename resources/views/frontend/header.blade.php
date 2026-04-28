@@ -25,7 +25,7 @@
                     </li>
                     <li>
                         <a href="/event" class="px-5 py-2.5 bg-gray-900 text-white text-sm font-bold rounded-xl hover:bg-red-600 transition duration-300 shadow-md shadow-gray-200">
-                            Cari Tiket
+                            Cari Event
                         </a>
                     </li>
                 </ul>

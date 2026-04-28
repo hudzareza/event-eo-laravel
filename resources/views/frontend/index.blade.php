@@ -20,12 +20,11 @@
                     Platform manajemen tiket dan registrasi event paling simpel buat para EO. Fokus ke acaranya, biar kami yang urus sistemnya.
                 </p>
                 <div class="mt-10 flex flex-wrap gap-4 justify-center lg:justify-start">
-                    <a href="#" class="px-8 py-3 bg-white text-red-600 font-bold rounded-lg shadow-lg hover:bg-gray-100 transition">Cari Event</a>
-                    <a href="#" class="px-8 py-3 bg-red-700 text-white font-bold rounded-lg border border-red-400 hover:bg-red-800 transition">Buat Event</a>
+                    <a href="/create" class="px-8 py-3 bg-red-700 text-white font-bold rounded-lg border border-red-400 hover:bg-red-800 transition">Buat Event</a>
                 </div>
             </div>
-            <div class="hidden lg:block lg:w-1/2">
-                <img src="https://illustrations.popsy.co/white/celebration.svg" alt="Event Illustration" class="w-full max-w-md mx-auto">
+            <div class="hidden lg:block lg:w-1/2 rounded-lg overflow-hidden">
+                <img src="{{ asset('img/image-1.jpeg') }}" alt="Event Illustration" class="w-full max-w-lg mx-auto rounded-lg backdrop:blur-sm shadow-2xl">
             </div>
         </div>
     </div>

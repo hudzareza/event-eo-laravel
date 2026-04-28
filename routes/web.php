@@ -22,6 +22,10 @@ Route::get('/about', function () {
     return view('frontend/about');
 });
 
+Route::get('/create', function () {
+    return view('frontend/create');
+});
+
 Route::get('/event', [EventController::class, 'index']);
 Route::get('/event/{id}', [EventController::class, 'show']);
 Route::post('/event/{id}/register', [EventRegistrationController::class, 'store'])
@@ -47,3 +51,4 @@ Route::get('/peserta/{id}', function ($id) {
 
 Route::get('/backend/event', [ListEventController::class, 'index']);
 Route::get('/backend/event/{id}', [ListEventController::class, 'show']);
+Route::get('/backend/event/{id}/export', [ListEventController::class, 'export'])->name('backend.event.export');
