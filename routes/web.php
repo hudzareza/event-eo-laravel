@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [IndexController::class, 'index']);
 
-Route::get('/register', function () {
-    return view('auth.register');
-});
+// Route::get('/register', function () {
+//     return view('auth.register');
+// });
 
 Route::get('/login', function () {
     return view('auth.login');
@@ -33,6 +33,11 @@ Route::post('/event/{id}/register', [EventRegistrationController::class, 'store'
 Route::get('/event/success/{id}', [EventController::class, 'success'])->name('event.success');
 Route::get('/validasi', function () {
     return view('frontend/validasi/index');
+})->middleware('check.token');
+
+Route::post('/set-session', function (\Illuminate\Http\Request $request) {
+    session(['token' => $request->token]);
+    return response()->json(['status' => 'ok']);
 });
 
 // Dashboard / Backend

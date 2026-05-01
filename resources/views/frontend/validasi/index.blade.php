@@ -14,13 +14,14 @@
     <div class="form-container">
         <div class="card-form">
             <div class="red-line"></div>
-
-            <form action="#" method="POST" class="inner-form">
+            <div id="reader" style="width:100%; max-width:400px; margin:20px auto;"></div>
+            <form id="checkin-form" action="#" method="POST" class="inner-form">
                 @csrf
 
                 <div class="form-group">
                     <label><i data-lucide="fingerprint"></i> UUID</label>
                     <input type="text" id="uuid-input" name="uuid" placeholder="Masukkan UUID untuk konfirmasi...">
+                    <input type="hidden" id="participant_id">
                 </div>
 
                 <div class="form-group">
@@ -116,29 +117,226 @@
     .back-link a { color: #9ca3af; text-decoration: none; font-size: 11px; font-weight: 700; letter-spacing: 1px; display: inline-flex; align-items: center; gap: 5px; transition: color 0.3s; }
     .back-link a:hover { color: #dc2626; }
 </style>
+<script src="https://unpkg.com/html5-qrcode"></script>
 
 <script>
-    window.addEventListener('DOMContentLoaded', () => {
-        // Init Lucide
-        lucide.createIcons();
+const token = localStorage.getItem('token');
 
-        const uuidInput = document.getElementById('uuid-input');
-        const confirmBtn = document.getElementById('confirm-btn');
+if (!token) {
+    alert('Session habis, login ulang');
+    window.location.href = '/login';
+}
 
-        // Fungsi cek input
-        const toggleButton = () => {
-            if (uuidInput.value.trim().length > 0) {
-                confirmBtn.classList.remove('d-none');
-            } else {
-                confirmBtn.classList.add('d-none');
+window.addEventListener('DOMContentLoaded', () => {
+    lucide.createIcons();
+
+    const uuidInput = document.getElementById('uuid-input');
+    const confirmBtn = document.getElementById('confirm-btn');
+
+    const namaInput = document.querySelector('[name="nama"]');
+    const emailInput = document.querySelector('[name="email"]');
+    const telpInput = document.querySelector('[name="no_telp"]');
+    const independentInput = document.querySelector('[name="independent_id"]');
+
+    const participantIdInput = document.getElementById('participant_id');
+
+    let isProcessing = false;
+
+    // =========================
+    // FETCH QR → API
+    // =========================
+    uuidInput.addEventListener('change', async function () {
+        if (isProcessing) return;
+
+        let qrToken = this.value.trim();
+
+        if (!qrToken) return;
+
+        isProcessing = true;
+
+        try {
+            const res = await fetch('/api/checkin/qr', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    qr_token: qrToken
+                })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                beepError();
+                alert(data.message);
+                isProcessing = false;
+                restartScanner();
+                return;
             }
-        };
 
-        // Jalankan pas ketik
-        uuidInput.addEventListener('input', toggleButton);
-        
-        // Jalankan sekali pas load (antisipasi kalo ada autocomplete)
-        toggleButton();
+            participantIdInput.value = data.data.id;
+
+            namaInput.value = data.data.nama;
+            emailInput.value = data.data.email;
+            telpInput.value = data.data.no_telp ?? '';
+
+            highlightSuccess();
+            beepSuccess();
+
+            independentInput.focus();
+
+            checkReady();
+
+        } catch (err) {
+            console.error(err);
+            alert('Gagal ambil data');
+            restartScanner();
+        }
+
+        isProcessing = false;
     });
+
+    // =========================
+    // ENABLE BUTTON OTOMATIS
+    // =========================
+    independentInput.addEventListener('input', checkReady);
+
+    function checkReady() {
+        const hasParticipant = participantIdInput.value;
+        const hasBand = independentInput.value;
+
+        if (hasParticipant && hasBand) {
+            confirmBtn.classList.remove('d-none');
+        } else {
+            confirmBtn.classList.add('d-none');
+        }
+    }
+
+    // =========================
+    // SUBMIT CHECKIN
+    // =========================
+    document.getElementById('checkin-form').addEventListener('submit', async function(e){
+        e.preventDefault();
+
+        if (isProcessing) return;
+
+        const participantId = participantIdInput.value;
+        const independentId = independentInput.value;
+
+        if (!participantId) {
+            alert('Scan QR dulu!');
+            return;
+        }
+
+        if (!independentId) {
+            alert('Scan gelang dulu!');
+            return;
+        }
+
+        isProcessing = true;
+
+        try {
+            const res = await fetch('/api/checkin/wristband', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    participant_id: participantId,
+                    independent_id: independentId
+                })
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                beepError();
+                alert(data.message);
+                isProcessing = false;
+                return;
+            }
+
+            beepSuccess();
+            highlightSuccess();
+
+            alert('✅ Check-in berhasil');
+
+            // reset
+            document.getElementById('checkin-form').reset();
+            confirmBtn.classList.add('d-none');
+
+            restartScanner();
+
+        } catch (err) {
+            console.error(err);
+            alert('Gagal check-in');
+        }
+
+        isProcessing = false;
+    });
+
+    // =========================
+    // SCANNER
+    // =========================
+    const html5QrCode = new Html5Qrcode("reader");
+
+    function startScanner() {
+        Html5Qrcode.getCameras().then(devices => {
+            if (devices && devices.length) {
+                let cameraId = devices[0].id;
+
+                html5QrCode.start(
+                    cameraId,
+                    { fps: 10, qrbox: { width: 250, height: 250 } },
+                    onScanSuccess
+                );
+            }
+        });
+    }
+
+    function restartScanner() {
+        setTimeout(() => {
+            startScanner();
+        }, 1500);
+    }
+
+    function onScanSuccess(decodedText) {
+        if (isProcessing) return;
+
+        html5QrCode.stop();
+
+        uuidInput.value = decodedText;
+        uuidInput.dispatchEvent(new Event('change'));
+    }
+
+    startScanner();
+
+    // =========================
+    // UX EFFECT
+    // =========================
+    function highlightSuccess() {
+        document.querySelector('.card-form').style.boxShadow = "0 0 0 3px #16a34a";
+        setTimeout(() => {
+            document.querySelector('.card-form').style.boxShadow = "";
+        }, 1000);
+    }
+});
+</script>
+
+<script>
+function beepSuccess() {
+    const audio = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+    audio.play();
+}
+
+function beepError() {
+    const audio = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
+    audio.play();
+}
 </script>
 @endsection

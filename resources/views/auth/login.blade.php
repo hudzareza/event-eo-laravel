@@ -64,8 +64,21 @@ window.login = async function() {
         });
 
         if (res.ok && data.token) {
+
             localStorage.setItem('token', data.token);
-            window.location.href = '/event';
+
+            await fetch('/set-session', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    token: data.token
+                })
+            });
+
+            window.location.href = '/validasi';
         } else {
             alert(data.message || 'Login gagal');
         }

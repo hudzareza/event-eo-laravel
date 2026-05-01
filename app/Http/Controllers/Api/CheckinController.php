@@ -45,6 +45,12 @@ class CheckinController extends Controller
 
         $participant = Participant::find($request->participant_id);
 
+        if ($participant->checkin_status) {
+            return response()->json([
+                'message' => 'Peserta sudah check-in'
+            ], 400);
+        }
+
         $exists = Participant::where('independent_id', $request->independent_id)->exists();
 
         if ($exists) {
@@ -58,12 +64,6 @@ class CheckinController extends Controller
             'checkin_status' => true,
             'checkin_at' => now()
         ]);
-
-        if ($participant->checkin_status) {
-            return response()->json([
-                'message' => 'Peserta sudah check-in'
-            ], 400);
-        }
 
         return response()->json([
             'message' => 'Check-in berhasil',
