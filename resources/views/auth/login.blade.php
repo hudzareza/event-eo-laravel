@@ -1,62 +1,187 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-        <div>
-            <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
-                Selamat Datang Kembali
-            </h2>
-            <p class="mt-2 text-center text-sm text-gray-600">
-                Silahkan login ke akun Anda
-            </p>
-        </div>
-        
-        <div class="mt-8 space-y-4">
-            <div class="rounded-md shadow-sm -space-y-px">
-                <div>
-                    <label for="email" class="sr-only">Email address</label>
-                    <input id="email" name="email" type="email" required 
-                        class="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                        placeholder="Alamat Email">
-                </div>
-                <div>
-                    <label for="password" class="sr-only">Password</label>
-                    <input id="password" name="password" type="password" required 
-                        class="appearance-none rounded-none relative block w-full px-3 py-3 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" 
-                        placeholder="Kata Sandi">
-                </div>
-            </div>
+<div class="login-page">
 
-            <div>
-                <button onclick="login()" 
-                    class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
-                    <span class="absolute left-0 inset-y-0 flex items-center pl-3">
-                        <svg class="h-5 w-5 text-indigo-500 group-hover:text-indigo-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-                        </svg>
-                    </span>
-                    Masuk Sekarang
-                </button>
-            </div>
+    <!-- Background Glow -->
+    <div class="bg-glow"></div>
+
+    <div class="login-card">
+        
+        <!-- Header -->
+        <div class="login-header">
+            <h1>🎫 EVENT SCANNER</h1>
+            <p>Login untuk mulai validasi peserta</p>
         </div>
+
+        <!-- Form -->
+        <div class="form-group">
+            <input id="email" type="email" placeholder="Email">
+        </div>
+
+        <div class="form-group">
+            <input id="password" type="password" placeholder="Password">
+        </div>
+
+        <button onclick="login()" class="btn-login">
+            🚀 MASUK SEKARANG
+        </button>
+
+        <p class="footer-text">Powered by Event EO System</p>
+
     </div>
 </div>
+
+<style>
+/* =========================
+   BACKGROUND
+========================= */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #0f172a, #1e293b, #020617);
+    position: relative;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Glow effect */
+.bg-glow {
+    position: absolute;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(99,102,241,0.4) 0%, transparent 70%);
+    top: -100px;
+    left: -100px;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(30px); }
+    100% { transform: translateY(0px); }
+}
+
+/* =========================
+   CARD
+========================= */
+.login-card {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 380px;
+    padding: 40px 30px;
+
+    backdrop-filter: blur(20px);
+    background: rgba(255,255,255,0.05);
+
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+
+    box-shadow:
+        0 0 40px rgba(99,102,241,0.3),
+        inset 0 0 20px rgba(255,255,255,0.05);
+
+    text-align: center;
+}
+
+/* =========================
+   HEADER
+========================= */
+.login-header h1 {
+    color: #fff;
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 5px;
+    letter-spacing: 1px;
+}
+
+.login-header p {
+    color: #cbd5f5;
+    font-size: 13px;
+    margin-bottom: 25px;
+}
+
+/* =========================
+   INPUT
+========================= */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+.form-group input::placeholder {
+    color: #94a3b8;
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: #6366f1;
+    box-shadow: 0 0 10px #6366f1;
+}
+
+/* =========================
+   BUTTON
+========================= */
+.btn-login {
+    width: 100%;
+    padding: 14px;
+    margin-top: 10px;
+
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border: none;
+    border-radius: 12px;
+
+    color: white;
+    font-weight: 800;
+    letter-spacing: 1px;
+
+    cursor: pointer;
+    transition: 0.3s;
+
+    box-shadow: 0 0 15px rgba(99,102,241,0.6);
+}
+
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(139,92,246,0.9);
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer-text {
+    margin-top: 20px;
+    font-size: 10px;
+    color: #94a3b8;
+}
+</style>
+
 <script src="{{ asset('js/api.js') }}"></script>
 <script>
 window.login = async function() {
-    const btn = document.querySelector('button');
+    const btn = document.querySelector('.btn-login');
     const originalText = btn.innerText;
-    
-    btn.innerText = 'Memproses...';
+
+    btn.innerText = 'Loading...';
     btn.disabled = true;
 
     try {
         const { res, data } = await apiFetch('/api/login', {
             method: 'POST',
-            headers: {
-                'Accept': 'application/json'
-            },
+            headers: { 'Accept': 'application/json' },
             body: JSON.stringify({
                 email: document.getElementById('email').value,
                 password: document.getElementById('password').value
@@ -73,23 +198,21 @@ window.login = async function() {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: JSON.stringify({
-                    token: data.token
-                })
+                body: JSON.stringify({ token: data.token })
             });
 
             window.location.href = '/validasi';
+
         } else {
             alert(data.message || 'Login gagal');
         }
 
     } catch (error) {
-        console.log(error);
-        alert('Terjadi kesalahan koneksi.');
-    } finally {
-        btn.innerText = originalText;
-        btn.disabled = false;
+        alert('Koneksi error');
     }
+
+    btn.innerText = originalText;
+    btn.disabled = false;
 }
 </script>
 @endsection

@@ -17,6 +17,10 @@ class RoleMiddleware
     {
         $user = auth()->user();
 
+        if (!auth()->check()) {
+            return redirect('/login-admin');
+        }
+
         if (!$user || !in_array($user->role, $roles)) {
             return response()->json(['message' => 'Forbidden'], 403);
         }

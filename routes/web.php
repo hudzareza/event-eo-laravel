@@ -14,7 +14,14 @@ Route::get('/', [IndexController::class, 'index']);
 //     return view('auth.register');
 // });
 
-Route::get('/login', function () {
+Route::get('/login-admin', function () {
+    return view('auth.login-admin');
+});
+
+Route::post('/login-admin', [AuthController::class, 'loginWeb']);
+Route::post('/logout-admin', [AuthController::class, 'logoutWeb']);
+
+Route::get('/login-scanner', function () {
     return view('auth.login');
 });
 
@@ -40,20 +47,22 @@ Route::post('/set-session', function (\Illuminate\Http\Request $request) {
     return response()->json(['status' => 'ok']);
 });
 
-// Dashboard / Backend
-Route::get('/dashboard', function () {
-    return view('backend/dashboard');
-});
-// ->middleware(['auth'])->name('dashboard');
+Route::middleware(['auth', 'role:admin,super_admin'])->group(function () {
+    // Dashboard / Backend
+    Route::get('/dashboard', function () {
+        return view('backend/dashboard');
+    });
+    // ->middleware(['auth'])->name('dashboard');
 
-Route::get('/peserta', function () {
-    return view('backend/peserta/index');
-});
+    Route::get('/peserta', function () {
+        return view('backend/peserta/index');
+    });
 
-Route::get('/peserta/{id}', function ($id) {
-    return view('backend/peserta/show', ['pesertaId' => $id]);
-});
+    Route::get('/peserta/{id}', function ($id) {
+        return view('backend/peserta/show', ['pesertaId' => $id]);
+    });
 
-Route::get('/backend/event', [ListEventController::class, 'index']);
-Route::get('/backend/event/{id}', [ListEventController::class, 'show']);
-Route::get('/backend/event/{id}/export', [ListEventController::class, 'export'])->name('backend.event.export');
+    Route::get('/backend/event', [ListEventController::class, 'index']);
+    Route::get('/backend/event/{id}', [ListEventController::class, 'show']);
+    Route::get('/backend/event/{id}/export', [ListEventController::class, 'export'])->name('backend.event.export');
+});

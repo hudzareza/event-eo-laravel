@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -52,5 +53,35 @@ class AuthController extends Controller
             'user' => $user,
             'token' => $token
         ])->cookie('token', $token, 60);
+    }
+
+    public function loginWeb(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+
+            return redirect('/dashboard');
+        }
+
+        return back()->withErrors([
+            'email' => 'Email atau password salah'
+        ]);
+    }
+
+    public function logoutWeb(Request $request)
+    {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login-admin');
     }
 }
