@@ -19,20 +19,21 @@ class Event extends Model
     protected $fillable = [
         'client_id',
         'title',
-        'slug',
         'thumbnail',
+        'category',
         'description',
         'location',
         'start_date',
         'end_date',
         'quota',
+        'registered_count',
         'event_type',
-        'registration_type',
         'is_public',
         'is_paid',
         'price',
+        'access_token',
         'status',
-        'created_by',
+        'created_by'
     ];
 
     public function client()
@@ -48,5 +49,10 @@ class Event extends Model
     public function registrations()
     {
         return $this->hasMany(Registration::class);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

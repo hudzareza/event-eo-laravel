@@ -3,9 +3,9 @@
 use App\Http\Controllers\IndexController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventRegistrationController;
-
+use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Backend\ListEventController;
-
+use App\Http\Controllers\Backend\EventController as EventManagement;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [IndexController::class, 'index']);
@@ -35,8 +35,7 @@ Route::get('/create', function () {
 
 Route::get('/event', [EventController::class, 'index']);
 Route::get('/event/{id}', [EventController::class, 'show']);
-Route::post('/event/{id}/register', [EventRegistrationController::class, 'store'])
-    ->name('event.register');
+Route::post('/event/{id}/register', [EventRegistrationController::class, 'store'])->name('event.register');
 Route::get('/event/success/{id}', [EventController::class, 'success'])->name('event.success');
 Route::get('/validasi', function () {
     return view('frontend/validasi/index');
@@ -65,4 +64,12 @@ Route::middleware(['auth', 'role:admin,super_admin'])->group(function () {
     Route::get('/backend/event', [ListEventController::class, 'index']);
     Route::get('/backend/event/{id}', [ListEventController::class, 'show']);
     Route::get('/backend/event/{id}/export', [ListEventController::class, 'export'])->name('backend.event.export');
+
+    Route::get('/backend/event-management', [EventManagement::class, 'index']);
+    Route::get('/backend/event-management/create', [EventManagement::class, 'create']);
+    Route::post('/backend/event-management', [EventManagement::class, 'store']);
+    Route::get('/backend/event-management/{id}/edit', [EventManagement::class, 'edit']);
+    Route::put('/backend/event-management/{id}', [EventManagement::class, 'update']);
+    Route::delete('/backend/event-management/{id}', [EventManagement::class, 'destroy']);
+    Route::get('/backend/event-management/{id}', [EventManagement::class, 'show']);
 });
